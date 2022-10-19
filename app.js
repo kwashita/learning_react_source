@@ -19,12 +19,32 @@ function createTextElement(text){
     }
 }
 
-let h1 = createElement(
+function render(element, container){
+    //创建父元素
+    const dom = element.type === "TEXT_ELEMENT" ? document.createTextNode("") : document.createElement(element.type);
+
+    //赋予属性
+    // console.log(element.props["style"]);
+    Object.keys(element.props).filter(item=>item!=="children").forEach(item => {         dom[item] = element.props[item]
+    });
+    
+   
+
+
+    //递归渲染子元素
+    element.props.children.forEach(item=>render(item, dom))
+
+
+    //追加到父节点
+    container.append(dom);
+}
+
+let app = createElement(
     "h1", 
-    {title: "foo", name: 'Lucy'}, 
-    createElement("a", null, "bar"), 
-    createElement("b"),
-    "Hello world"
+    {style: "background: skyblue", id: "box"}, 
+    "Hello world",
+    createElement("a", {style: "color: yellow", href: "http://baidu.com"}, "Bai du"), 
+
 );
 
-console.log(h1);
+render(app, document.getElementById("root"));
