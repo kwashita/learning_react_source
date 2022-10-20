@@ -39,6 +39,22 @@ function render(element, container){
     container.append(dom);
 }
 
+//ready for Fiber
+let nextUnitOfWork = null
+
+function workLoop(deadLine){
+    let shouldYield = false;
+
+    while(nextUnitOfWork && !shouldYield) {
+        nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
+        shouldYield = deadLine.timeRemaining() < 1;
+    }
+
+    requestIdleCallback(workLoop);
+}
+requestIdleCallback(workLoop);
+function performUnitOfWork(work){}
+
 let app = createElement(
     "h1", 
     {style: "background: skyblue", id: "box"}, 
